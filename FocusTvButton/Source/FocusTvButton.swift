@@ -100,6 +100,12 @@ open class FocusTvButton: UIButton {
         didSet { self.updateView() }
     }
     
+    public var shouldTintFocusedImage = true {
+        didSet {
+            self.updateFocusedImage()
+        }
+    }
+    
     open override var isSelected: Bool {
         didSet { self.updateView() }
     }
@@ -253,6 +259,25 @@ open class FocusTvButton: UIButton {
         UIView.animate(withDuration: self.animationDuration, animations: { [weak self] in
             self?.updateView()
             }, completion: nil)
+    }
+    
+    // MARK: - Image Setter
+    
+    override open func setImage(_ image: UIImage?, for state: UIControlState) {
+        super.setImage(image, for: state)
+        
+        if state != .focused {
+            self.updateFocusedImage()
+        }
+    }
+    
+    private func updateFocusedImage() {
+        guard let normalImage = self.image(for: .normal), self.shouldTintFocusedImage else {
+            self.setImage(self.image(for: .normal), for: .focused)
+            return
+        }
+        
+        self.setImage(normalImage.withRenderingMode(.alwaysTemplate), for: .focused)
     }
 }
 
