@@ -21,7 +21,7 @@ let package = Package(
         .target(
             name: "FocusTvButton",
             dependencies: [],
-            path: "FocusTvButton/Source",
+            path: "FocusTvButton/Source"
         ),
         //.testTarget(
         //    name: "FuzeUtilsTests",
