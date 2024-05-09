@@ -110,7 +110,7 @@ open class FocusTvButton: UIButton {
         didSet { self.updateView() }
     }
     
-    open override var buttonType: UIButtonType {
+    open override var buttonType: UIButton.ButtonType {
         return .custom
     }
     
@@ -264,7 +264,7 @@ open class FocusTvButton: UIButton {
     
     // MARK: - Image Setter
     
-    override open func setImage(_ image: UIImage?, for state: UIControlState) {
+    override open func setImage(_ image: UIImage?, for state: UIControl.State) {
         super.setImage(image, for: state)
         
         if state != .focused {
