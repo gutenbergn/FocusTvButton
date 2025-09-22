@@ -100,12 +100,6 @@ open class FocusTvButton: UIButton {
         didSet { self.updateView() }
     }
     
-    public var shouldTintFocusedImage = true {
-        didSet {
-            self.updateFocusedImage()
-        }
-    }
-    
     open override var isSelected: Bool {
         didSet { self.updateView() }
     }
@@ -264,21 +258,13 @@ open class FocusTvButton: UIButton {
     
     // MARK: - Image Setter
     
-    override open func setImage(_ image: UIImage?, for state: UIControl.State) {
-        super.setImage(image, for: state)
+    open func setFocusableImage(_ image: UIImage?, focusedTintColor: UIColor) {
+        self.setImage(image, for: .normal)
         
-        if state != .focused {
-            self.updateFocusedImage()
-        }
-    }
-    
-    private func updateFocusedImage() {
-        guard let normalImage = self.image(for: .normal), self.shouldTintFocusedImage else {
-            self.setImage(self.image(for: .normal), for: .focused)
-            return
-        }
+        let focusedImage = image?.withRenderingMode(.alwaysTemplate).tinted(
+            tintColor: focusedTintColor)
         
-        self.setImage(normalImage.withRenderingMode(.alwaysTemplate), for: .focused)
+        self.setImage(focusedImage, for: .focused)
     }
 }
 
@@ -323,4 +309,17 @@ final private class GradientView: UIView {
     private lazy var gradientLayer: CAGradientLayer = {
         return self.layer as? CAGradientLayer ?? CAGradientLayer()
     }()
+}
+
+fileprivate extension UIImage {
+    fileprivate func tinted(tintColor: UIColor) -> UIImage {
+        var alwaysTemplateImage = self.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        tintColor.set()
+        alwaysTemplateImage.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        alwaysTemplateImage = UIGraphicsGetImageFromCurrentImageContext() ?? alwaysTemplateImage
+        UIGraphicsEndImageContext()
+        
+        return alwaysTemplateImage
+    }
 }
