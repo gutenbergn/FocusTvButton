@@ -140,7 +140,6 @@ open class FocusTvButton: UIButton {
     override open func awakeFromNib() {
         super.awakeFromNib()
         self.updateView()
-        self.updateFocusedImage()
     }
     
     // MARK: - Focus Update
